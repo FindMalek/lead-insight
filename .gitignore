@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Explicitly allow tracking the build folder (overrides root .gitignore)
+!build/
+
+# Generated client - exclude the entire generated directory
+prisma/generated/
