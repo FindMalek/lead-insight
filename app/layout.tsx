@@ -2,11 +2,14 @@ import "@/styles/globals.css"
 
 import type { Metadata, Viewport } from "next"
 
+import { env } from "@/env"
+
 import { fonts } from "@/config/fonts"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
 import { Analytics } from "@/components/layout/analytics"
+import { HappyDebug } from "@/components/layout/happy-debug"
 import { LayoutWrapper } from "@/components/layout/layout-wrapper"
 import { TailwindIndicator } from "@/components/layout/tailwind-indicator"
 import { Toaster } from "@/components/ui/sonner"
@@ -79,10 +82,16 @@ export default function RootLayout({ children }: RootLayoutProps) {
         )}
       >
         <LayoutWrapper>
-          {children}
-          <Analytics />
-          <Toaster />
-          <TailwindIndicator />
+          {env.HAPPY_DEBUG === "true" ? (
+            <>
+              {children}
+              <Analytics />
+              <Toaster />
+              <TailwindIndicator />
+            </>
+          ) : (
+            <HappyDebug />
+          )}
         </LayoutWrapper>
       </body>
     </html>
