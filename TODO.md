@@ -1,5 +1,12 @@
 # LeadInsight Project TODO List
 
+## CONTINUE
+
+- [ ] Implement <https://ui.shadcn.com/blocks#dashboard-01> for the dashboard.
+- [ ] Implement `signOut` button in the dashboard.
+- [ ] Verify the seeder for the `user` table.
+- [ ] Debug the `hash` and `verify` functions in the `auth.ts`
+
 ## Phase 1: Project Setup
 
 - [ ] Create a new GitHub repository for LeadInsight.

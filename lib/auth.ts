@@ -4,6 +4,8 @@ import { prismaAdapter } from "better-auth/adapters/prisma"
 
 import { env } from "@/env"
 
+import { saltAndHashPassword, verifyPassword } from "@/lib/password"
+
 export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
   database: prismaAdapter(prisma, {
@@ -11,5 +13,9 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    password: {
+      hash: saltAndHashPassword,
+      verify: verifyPassword,
+    },
   },
 })

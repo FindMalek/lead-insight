@@ -6,13 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
-import { loginSchema, type LoginFormData } from "@/config/schema"
-import { signIn } from "@/lib/auth-client"
+import { signUpSchema, type SignUpFormData } from "@/config/schema"
+import { signUp } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
 
 import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   Form,
   FormControl,
@@ -23,30 +22,32 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
-export function AuthLoginForm({
+export function AuthRegisterForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
-  const form = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<SignUpFormData>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: "",
+      name: "",
       password: "",
-      rememberMe: true,
+      image: "https://avatar.vercel.sh/default",
     },
   })
 
-  async function onSubmit(data: LoginFormData) {
+  async function onSubmit(data: SignUpFormData) {
     try {
       setIsLoading(true)
-      const { error } = await signIn.email(
+      const { error } = await signUp.email(
         {
+          name: data.name,
           email: data.email,
           password: data.password,
-          rememberMe: data.rememberMe,
+          image: `https://avatar.vercel.sh/${data.email}`,
           callbackURL: "/dashboard",
         },
         {
@@ -79,6 +80,19 @@ export function AuthLoginForm({
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input disabled={isLoading} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
@@ -108,29 +122,11 @@ export function AuthLoginForm({
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="rememberMe"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    disabled={isLoading}
-                  />
-                </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel>Remember me</FormLabel>
-                </div>
-              </FormItem>
-            )}
-          />
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? (
               <Icons.spinner className="mr-2 h-6 w-6 animate-spin" />
             ) : null}
-            Login
+            Create Account
           </Button>
         </form>
       </Form>
