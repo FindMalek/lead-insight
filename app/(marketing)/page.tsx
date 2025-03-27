@@ -8,7 +8,7 @@ import { StatCard } from "@/components/shared/stat-card"
 export default function Home() {
   return (
     <div className="relative flex min-h-screen flex-col">
-      <div className="bg-black/5 absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden bg-black/5">
         <AnimatedGridPattern
           numSquares={30}
           maxOpacity={1}

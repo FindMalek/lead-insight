@@ -1,9 +1,10 @@
 import Link from "next/link"
 
 import { siteConfig } from "@/config/site"
+import { cn } from "@/lib/utils"
 
 import { HyperText } from "@/components/fancy/hyper-text"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 
 export function MarketingHeaderDesktop() {
   return (
@@ -32,9 +33,12 @@ export function MarketingHeaderDesktop() {
         </Link>
       </div>
       <div className="flex items-center">
-        <Button variant="outline" size="sm">
+        <Link
+          href="/login"
+          className={cn(buttonVariants({ variant: "default", size: "sm" }))}
+        >
           Login
-        </Button>
+        </Link>
       </div>
     </header>
   )
