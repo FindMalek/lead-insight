@@ -5,7 +5,7 @@ import { PrismaNeon } from "@prisma/adapter-neon"
 import { PrismaClient } from "@prisma/client"
 import ws from "ws"
 
-import { env } from "@/env.mjs"
+import { env } from "@/env"
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient }
 
