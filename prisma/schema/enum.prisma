@@ -1,0 +1,54 @@
+enum ImportType {
+  APOLLO_INSTAGRAM_LEADS
+  // Can expand for other import types in the future
+
+  @@map("import_type")
+}
+
+enum BatchStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+
+  @@map("batch_status")
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  RESPONDED
+  QUALIFIED
+  DISQUALIFIED
+  CONVERTED
+
+  @@map("lead_status")
+}
+
+enum UploadStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+
+  @@map("upload_status")
+}
+
+enum JobStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+
+  @@map("job_status")
+}
+
+enum LogLevel {
+  INFO
+  WARNING
+  ERROR
+  DEBUG
+
+  @@map("log_level")
+}

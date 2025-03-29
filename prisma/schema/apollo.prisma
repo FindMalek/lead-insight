@@ -1,0 +1,107 @@
+model ApolloBatch {
+  id String @id @default(uuid())
+
+  name        String
+  description String?
+  fileName    String
+  uploadedBy  String
+
+  errorMessage String?
+  status       BatchStatus @default(PENDING)
+
+  leads InstagramLead[]
+
+  processedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime  @default(now())
+  uploadedAt  DateTime  @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("instagram_batch")
+}
+
+model InstagramLead {
+  id String @id @default(uuid())
+
+  // Instagram profile data
+  profileUrl  String
+  profileName String
+  fullName    String?
+  bio         String?
+  instagramId String?
+  imageUrl    String?
+
+  // Statistics
+  followersCount       Float?
+  followingCount       Float?
+  postsCount           Float?
+  mutualFollowersCount Float?
+
+  // Account status
+  isBusinessAccount Boolean?
+  isPrivate         Boolean?
+  isVerified        Boolean?
+  joinedRecently    Boolean?
+
+  // Business information
+  category              String?
+  businessCategory      String?
+  businessStreetAddress String?
+  businessZipCode       String?
+  businessCity          String?
+
+  // Contact information
+  website          String?
+  email            String? // Renamed from mailFound for clarity
+  alternativeEmail String? // Renamed from mailFound2 for clarity
+  phoneNumber      String?
+  snapchat         String?
+
+  // Viewer relationship
+  blockedByViewer   Boolean?
+  followedByViewer  Boolean?
+  followsViewer     Boolean?
+  requestedByViewer Boolean?
+
+  // Processing metadata
+  query       String?
+  timestamp   DateTime?
+  processedAt DateTime?
+  error       String?
+  status      LeadStatus @default(NEW)
+
+  // CRM data
+  notes String?
+  tags  Tag[]
+
+  // Timestamps
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  batchId String
+  batch   ApolloBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  @@index([email])
+  @@index([status])
+  @@index([batchId])
+  @@index([profileName])
+  @@map("instagram_lead")
+}
+
+model Tag {
+  id String @id @default(uuid())
+
+  name  String
+  color String?
+
+  leads InstagramLead[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name])
+  @@map("tag")
+}
