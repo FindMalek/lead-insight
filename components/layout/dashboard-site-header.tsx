@@ -1,5 +1,4 @@
-import { siteConfig } from "@/config/site"
-
+import { DashboardDynamicBreadcrumb } from "@/components/layout/dashboard-dynamic-breadcrumb"
 import { ModeToggle } from "@/components/shared/mode-toggle"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
@@ -13,7 +12,7 @@ export function DashboardSiteHeader() {
           orientation="vertical"
           className="mx-2 data-[orientation=vertical]:h-4"
         />
-        <h1 className="text-base font-medium">{siteConfig.name}</h1>
+        <DashboardDynamicBreadcrumb />
       </div>
       <ModeToggle />
     </header>

@@ -22,11 +22,6 @@ import {
 } from "@/components/ui/sidebar"
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Dashboard",
@@ -34,24 +29,34 @@ const data = {
       icon: Icons.dashboard,
     },
     {
-      title: "Lifecycle",
-      url: "#",
-      icon: Icons.lifecycle,
-    },
-    {
-      title: "Analytics",
-      url: "#",
-      icon: Icons.barChart,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: Icons.folder,
-    },
-    {
-      title: "Team",
-      url: "#",
+      title: "Leads",
+      url: "/dashboard/leads",
       icon: Icons.users,
+    },
+    {
+      title: "Batches",
+      url: "/dashboard/batches",
+      icon: Icons.databaseZap,
+    },
+    {
+      title: "Imports",
+      url: "/dashboard/imports",
+      icon: Icons.trendingUp,
+    },
+    {
+      title: "Tags",
+      url: "/dashboard/tags",
+      icon: Icons.badgeCheck,
+    },
+    {
+      title: "Campaigns",
+      url: "/dashboard/campaigns",
+      icon: Icons.mail,
+    },
+    {
+      title: "Reports",
+      url: "/dashboard/reports",
+      icon: Icons.barChart,
     },
   ],
   navSecondary: [
@@ -62,7 +67,7 @@ const data = {
     },
     {
       title: "Settings",
-      url: "#",
+      url: "/dashboard/settings",
       icon: Icons.settings,
     },
   ],
