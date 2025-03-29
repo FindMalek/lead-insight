@@ -1,9 +1,15 @@
+import { Metadata } from "next"
 import Link from "next/link"
 
 import { siteConfig } from "@/config/site"
 
 import { AuthRegisterForm } from "@/components/app/auth-register-form"
 import { Icons } from "@/components/shared/icons"
+
+export const metadata: Metadata = {
+  title: "Register",
+  description: "Create an account",
+}
 
 export default function RegisterPage() {
   return (

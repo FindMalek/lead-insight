@@ -1,9 +1,15 @@
+import { Metadata } from "next"
 import Link from "next/link"
 
 import { siteConfig } from "@/config/site"
 
 import { AuthLoginForm } from "@/components/app/auth-login-form"
 import { Icons } from "@/components/shared/icons"
+
+export const metadata: Metadata = {
+  title: "Login",
+  description: "Login to your account",
+}
 
 export default function LoginPage() {
   return (

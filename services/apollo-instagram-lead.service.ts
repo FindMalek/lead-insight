@@ -1,22 +1,28 @@
-import { PrismaClient, ApolloBatch, InstagramLead, BatchStatus, LeadStatus } from '@prisma/client';
-import { database } from '@/prisma/client';
+import { database } from "@/prisma/client"
+import {
+  ApolloBatch,
+  BatchStatus,
+  InstagramLead,
+  LeadStatus,
+  PrismaClient,
+} from "@prisma/client"
 
 export class ApolloInstagramLeadService {
-  private prisma: PrismaClient;
+  private prisma: PrismaClient
 
   constructor() {
-    this.prisma = database;
+    this.prisma = database
   }
 
   /**
    * Create a new batch for Instagram leads
    */
   async createBatch(data: {
-    name: string;
-    description?: string;
-    fileName: string;
-    uploadedBy: string;
-    userId: string;
+    name: string
+    description?: string
+    fileName: string
+    uploadedBy: string
+    userId: string
   }): Promise<ApolloBatch> {
     return this.prisma.apolloBatch.create({
       data: {
@@ -25,9 +31,9 @@ export class ApolloInstagramLeadService {
         fileName: data.fileName,
         uploadedBy: data.uploadedBy,
         status: BatchStatus.PENDING,
-        userId: data.userId
-      }
-    });
+        userId: data.userId,
+      },
+    })
   }
 
   /**
@@ -35,16 +41,16 @@ export class ApolloInstagramLeadService {
    */
   async getBatchById(batchId: string): Promise<ApolloBatch | null> {
     return this.prisma.apolloBatch.findUnique({
-      where: { id: batchId }
-    });
+      where: { id: batchId },
+    })
   }
 
   /**
    * Update batch status
    */
   async updateBatchStatus(
-    batchId: string, 
-    status: BatchStatus, 
+    batchId: string,
+    status: BatchStatus,
     errorMessage?: string
   ): Promise<ApolloBatch> {
     return this.prisma.apolloBatch.update({
@@ -52,112 +58,116 @@ export class ApolloInstagramLeadService {
       data: {
         status,
         errorMessage,
-        ...(status === BatchStatus.COMPLETED || status === BatchStatus.FAILED ? { processedAt: new Date() } : {})
-      }
-    });
+        ...(status === BatchStatus.COMPLETED || status === BatchStatus.FAILED
+          ? { processedAt: new Date() }
+          : {}),
+      },
+    })
   }
 
   /**
    * Create a lead and associate it with a batch
    */
   async createLead(
-    batchId: string, 
-    leadData: Omit<InstagramLead, 'id' | 'createdAt' | 'updatedAt' | 'batchId'>
+    batchId: string,
+    leadData: Omit<InstagramLead, "id" | "createdAt" | "updatedAt" | "batchId">
   ): Promise<InstagramLead> {
     return this.prisma.instagramLead.create({
       data: {
         ...leadData,
         batch: {
-          connect: { id: batchId }
-        }
-      }
-    });
+          connect: { id: batchId },
+        },
+      },
+    })
   }
 
   /**
    * Create many leads in a batch operation
    */
   async createManyLeads(
-    batchId: string, 
-    leadsData: Array<Omit<InstagramLead, 'id' | 'createdAt' | 'updatedAt' | 'batchId'>>
+    batchId: string,
+    leadsData: Array<
+      Omit<InstagramLead, "id" | "createdAt" | "updatedAt" | "batchId">
+    >
   ): Promise<number> {
     // Map the data to include the batchId
-    const dataWithBatchId = leadsData.map(lead => ({
+    const dataWithBatchId = leadsData.map((lead) => ({
       ...lead,
-      batchId
-    }));
+      batchId,
+    }))
 
     // Create many leads in a single operation
     const result = await this.prisma.instagramLead.createMany({
-      data: dataWithBatchId
-    });
+      data: dataWithBatchId,
+    })
 
-    return result.count;
+    return result.count
   }
 
   /**
    * Get leads by batch ID with pagination
    */
   async getLeadsByBatchId(
-    batchId: string, 
-    page: number = 1, 
+    batchId: string,
+    page: number = 1,
     pageSize: number = 50
   ): Promise<{ leads: InstagramLead[]; total: number }> {
-    const skip = (page - 1) * pageSize;
+    const skip = (page - 1) * pageSize
 
     const [leads, total] = await Promise.all([
       this.prisma.instagramLead.findMany({
         where: { batchId },
         skip,
         take: pageSize,
-        orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: "desc" },
       }),
       this.prisma.instagramLead.count({
-        where: { batchId }
-      })
-    ]);
+        where: { batchId },
+      }),
+    ])
 
-    return { leads, total };
+    return { leads, total }
   }
 
   /**
    * Get all batches with pagination
    */
   async getBatches(
-    page: number = 1, 
-    pageSize: number = 20, 
+    page: number = 1,
+    pageSize: number = 20,
     userId?: string
   ): Promise<{ batches: ApolloBatch[]; total: number }> {
-    const skip = (page - 1) * pageSize;
+    const skip = (page - 1) * pageSize
 
-    const whereClause = userId ? { userId } : {};
+    const whereClause = userId ? { userId } : {}
 
     const [batches, total] = await Promise.all([
       this.prisma.apolloBatch.findMany({
         where: whereClause,
         skip,
         take: pageSize,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
         include: {
           _count: {
-            select: { leads: true }
-          }
-        }
+            select: { leads: true },
+          },
+        },
       }),
       this.prisma.apolloBatch.count({
-        where: whereClause
-      })
-    ]);
+        where: whereClause,
+      }),
+    ])
 
-    return { batches, total };
+    return { batches, total }
   }
 
   /**
    * Update lead status
    */
   async updateLeadStatus(
-    leadId: string, 
-    status: LeadStatus, 
+    leadId: string,
+    status: LeadStatus,
     notes?: string
   ): Promise<InstagramLead> {
     return this.prisma.instagramLead.update({
@@ -165,22 +175,22 @@ export class ApolloInstagramLeadService {
       data: {
         status,
         ...(notes ? { notes } : {}),
-        processedAt: new Date()
-      }
-    });
+        processedAt: new Date(),
+      },
+    })
   }
 
   /**
    * Search leads with various filters
    */
   async searchLeads(params: {
-    query?: string;
-    status?: LeadStatus;
-    minFollowers?: number;
-    batchId?: string;
-    isBusinessAccount?: boolean;
-    page?: number;
-    pageSize?: number;
+    query?: string
+    status?: LeadStatus
+    minFollowers?: number
+    batchId?: string
+    isBusinessAccount?: boolean
+    page?: number
+    pageSize?: number
   }): Promise<{ leads: InstagramLead[]; total: number }> {
     const {
       query,
@@ -189,37 +199,37 @@ export class ApolloInstagramLeadService {
       batchId,
       isBusinessAccount,
       page = 1,
-      pageSize = 50
-    } = params;
+      pageSize = 50,
+    } = params
 
-    const skip = (page - 1) * pageSize;
+    const skip = (page - 1) * pageSize
 
     // Build where clause based on provided filters
-    const whereClause: any = {};
-    
+    const whereClause: any = {}
+
     if (query) {
       whereClause.OR = [
-        { profileName: { contains: query, mode: 'insensitive' } },
-        { fullName: { contains: query, mode: 'insensitive' } },
-        { bio: { contains: query, mode: 'insensitive' } },
-        { email: { contains: query, mode: 'insensitive' } }
-      ];
+        { profileName: { contains: query, mode: "insensitive" } },
+        { fullName: { contains: query, mode: "insensitive" } },
+        { bio: { contains: query, mode: "insensitive" } },
+        { email: { contains: query, mode: "insensitive" } },
+      ]
     }
-    
+
     if (status) {
-      whereClause.status = status;
+      whereClause.status = status
     }
-    
+
     if (minFollowers) {
-      whereClause.followersCount = { gte: minFollowers };
+      whereClause.followersCount = { gte: minFollowers }
     }
-    
+
     if (batchId) {
-      whereClause.batchId = batchId;
+      whereClause.batchId = batchId
     }
-    
+
     if (isBusinessAccount !== undefined) {
-      whereClause.isBusinessAccount = isBusinessAccount;
+      whereClause.isBusinessAccount = isBusinessAccount
     }
 
     const [leads, total] = await Promise.all([
@@ -227,22 +237,22 @@ export class ApolloInstagramLeadService {
         where: whereClause,
         skip,
         take: pageSize,
-        orderBy: { followersCount: 'desc' },
+        orderBy: { followersCount: "desc" },
         include: {
           batch: {
             select: {
               name: true,
-              id: true
-            }
-          }
-        }
+              id: true,
+            },
+          },
+        },
       }),
       this.prisma.instagramLead.count({
-        where: whereClause
-      })
-    ]);
+        where: whereClause,
+      }),
+    ])
 
-    return { leads, total };
+    return { leads, total }
   }
 
   /**
@@ -253,9 +263,9 @@ export class ApolloInstagramLeadService {
       where: { id: leadId },
       include: {
         batch: true,
-        tags: true
-      }
-    });
+        tags: true,
+      },
+    })
   }
 
   /**
@@ -263,7 +273,7 @@ export class ApolloInstagramLeadService {
    */
   async deleteBatch(batchId: string): Promise<void> {
     await this.prisma.apolloBatch.delete({
-      where: { id: batchId }
-    });
+      where: { id: batchId },
+    })
   }
 }
