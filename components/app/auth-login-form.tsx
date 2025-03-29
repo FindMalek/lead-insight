@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
 import { loginSchema, type LoginFormData } from "@/config/schema"
-import { signIn } from "@/lib/auth-client"
+import { signIn } from "@/lib/auth/client"
 import { cn } from "@/lib/utils"
 
 import { Icons } from "@/components/shared/icons"

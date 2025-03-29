@@ -1,13 +1,10 @@
 "use client"
 
-import {
-  BellIcon,
-  CreditCardIcon,
-  LogOutIcon,
-  MoreVerticalIcon,
-  UserCircleIcon,
-} from "lucide-react"
+import { useRouter } from "next/navigation"
 
+import { signOut } from "@/lib/auth/client"
+
+import { Icons } from "@/components/shared/icons"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -25,16 +22,27 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
-export function DashboardNavUser({
-  user,
-}: {
+interface DashboardNavUserProps {
   user: {
     name: string
     email: string
     avatar: string
   }
-}) {
+}
+
+export function DashboardNavUser({ user }: DashboardNavUserProps) {
+  const router = useRouter()
   const { isMobile } = useSidebar()
+
+  async function handleSignOut() {
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/login")
+        },
+      },
+    })
+  }
 
   return (
     <SidebarMenu>
@@ -55,7 +63,7 @@ export function DashboardNavUser({
                   {user.email}
                 </span>
               </div>
-              <MoreVerticalIcon className="ml-auto size-4" />
+              <Icons.more className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -81,21 +89,17 @@ export function DashboardNavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <UserCircleIcon />
+                <Icons.user />
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <CreditCardIcon />
+                <Icons.creditCard />
                 Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <BellIcon />
-                Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOutIcon />
+            <DropdownMenuItem variant="destructive" onClick={handleSignOut}>
+              <Icons.logOut />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
