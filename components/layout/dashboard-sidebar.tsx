@@ -1,6 +1,9 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
+
+import { User as UserType } from "@/types/dashboard"
 
 import { siteConfig } from "@/config/site"
 
@@ -65,9 +68,11 @@ const data = {
   ],
 }
 
-export function DashboardSidebar({
-  ...props
-}: React.ComponentProps<typeof Sidebar>) {
+interface DashboardSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  user: UserType
+}
+
+export function DashboardSidebar({ user, ...props }: DashboardSidebarProps) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -77,12 +82,12 @@ export function DashboardSidebar({
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
+              <Link href="/">
                 <Icons.logo className="h-5 w-5" />
                 <span className="text-base font-semibold">
                   {siteConfig.name}
                 </span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -92,7 +97,7 @@ export function DashboardSidebar({
         <DashboardNavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <DashboardNavUser user={data.user} />
+        <DashboardNavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   )

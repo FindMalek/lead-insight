@@ -20,9 +20,11 @@ export default async function DashboardLayout({
     redirect("/login")
   }
 
+  const user = session.user
+
   return (
     <SidebarProvider>
-      <DashboardSidebar variant="inset" />
+      <DashboardSidebar variant="inset" user={user} />
       <SidebarInset>
         <DashboardSiteHeader />
         <div className="flex flex-1 flex-col">

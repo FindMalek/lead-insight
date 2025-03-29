@@ -2,10 +2,10 @@
 
 ## CONTINUE
 
-- [ ] Implement <https://ui.shadcn.com/blocks#dashboard-01> for the dashboard.
-- [ ] Implement `signOut` button in the dashboard.
-- [ ] Verify the seeder for the `user` table.
-- [ ] Debug the `hash` and `verify` functions in the `auth.ts`
+- [x] Implement <https://ui.shadcn.com/blocks#dashboard-01> for the dashboard.
+- [x] Implement `signOut` button in the dashboard.
+- [x] Verify the seeder for the `user` table.
+- [x] Debug the `hash` and `verify` functions in the `auth.ts`
 
 ## Phase 1: Project Setup
 
